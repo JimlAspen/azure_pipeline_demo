@@ -1,0 +1,44 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+
+type: command
+
+name: prepare_ml_datasets
+display_name: Prepare ML Datasets
+version: 1
+
+code: ..
+
+command: >-
+  python src/prepare/prepare_ml_datasets.py
+  --input_path ${{inputs.input_path}}
+  --storage_account ${{inputs.storage_account}}
+  --key_vault_url ${{inputs.key_vault_url}}
+  --training_output_path ${{inputs.training_output_path}}
+  --scoring_output_path ${{inputs.scoring_output_path}}
+  --scoring_fraction ${{inputs.scoring_fraction}}
+
+inputs:
+
+  input_path:
+    type: string
+
+  storage_account:
+    type: string
+
+  key_vault_url:
+    type: string
+
+  training_output_path:
+    type: string
+
+  scoring_output_path:
+    type: string
+
+  scoring_fraction:
+    type: number
+    default: 0.2
+
+environment: azureml:medallion-env@latest
+
+identity:
+  type: user_identity

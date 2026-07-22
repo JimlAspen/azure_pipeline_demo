@@ -1,0 +1,36 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+
+type: pipeline
+
+display_name: ml_pipeline
+experiment_name: ml_pipeline
+
+settings:
+  continue_on_step_failure: false
+
+inputs:
+  gold_path: abfss://lake@mockdeltalake.dfs.core.windows.net/lake/gold
+  storage_account: mockdeltalake
+  key_vault_url: https://mlwdev9815209134.vault.azure.net/
+  scoring_fraction: 0.5
+
+jobs:
+
+  prepare:
+
+    component: ../components/prepare_ml_datasets.yaml
+    compute: cc-train
+
+    inputs:
+
+      input_path: ${{parent.inputs.gold_path}}
+
+      storage_account: ${{parent.inputs.storage_account}}
+
+      key_vault_url: ${{parent.inputs.key_vault_url}}
+
+      training_output_path: abfss://lake@mockdeltalake.dfs.core.windows.net/lake/ml/training
+
+      scoring_output_path: abfss://lake@mockdeltalake.dfs.core.windows.net/lake/ml/scoring
+
+      scoring_fraction: ${{parent.inputs.scoring_fraction}}

@@ -1,0 +1,5 @@
+silver_table: "breast_cancer_clean"
+gold_table: "breast_cancer_features"
+
+container: "lake"
+storage_account: "mockdeltalake"

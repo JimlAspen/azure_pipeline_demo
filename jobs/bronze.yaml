@@ -1,0 +1,19 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: bronze_ingestion_job
+experiment_name: bronze_ingestion
+
+code: ../  # repo root
+command: >
+  python src/bronze/bronze.py 
+  --raw_csv_path breast_cancer.csv 
+  --output_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/bronze
+  --key_vault_url https://mlwdev9815209134.vault.azure.net/
+
+environment: azureml:bronze-env@latest
+
+identity:
+  type: user_identity
+
+compute: cc-train

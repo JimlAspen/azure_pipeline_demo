@@ -1,0 +1,27 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+
+type: pipeline
+
+display_name: medallion_pipeline
+experiment_name: medallion_pipeline
+
+identity:
+  type: user_identity
+
+jobs:
+
+  bronze:
+    component: ../components/bronze.yaml
+    compute: cc-train
+
+  silver:
+    component: ../components/silver.yaml
+    compute: cc-train
+    inputs:
+      bronze_ready: ${{parent.jobs.bronze.outputs.ready}}
+
+  gold:
+    component: ../components/gold.yaml
+    compute: cc-train
+    inputs:
+      silver_ready: ${{parent.jobs.silver.outputs.ready}}

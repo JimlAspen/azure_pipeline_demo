@@ -1,0 +1,6 @@
+raw_csv_path: "breast_cancer.csv"
+
+container: "lake"
+storage_account: "mockdeltalake"
+
+table_name: "breast_cancer"

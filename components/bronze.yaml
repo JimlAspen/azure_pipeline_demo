@@ -1,0 +1,26 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+
+type: command
+
+name: bronze_component
+display_name: Bronze Ingestion
+version: 1
+
+code: ../
+
+command: >
+  pip install azure-ai-ml &&
+  python src/bronze/bronze.py
+  --raw_csv_path breast_cancer.csv
+  --output_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/bronze
+  --key_vault_url https://mlwdev9815209134.vault.azure.net/
+  --ready_dir ${{outputs.ready}}
+
+outputs:
+  ready:
+    type: uri_folder
+
+environment: azureml:bronze-env@latest
+
+identity:
+  type: user_identity

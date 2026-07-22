@@ -1,0 +1,30 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+
+type: command
+
+name: silver_component
+display_name: Silver Transformation
+version: 1
+
+code: ../
+
+inputs:
+  bronze_ready:
+    type: uri_folder
+
+outputs:
+  ready:
+    type: uri_folder
+
+command: >
+  pip install azure-ai-ml &&
+  python src/silver/silver.py
+  --input_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/bronze
+  --output_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/silver
+  --key_vault_url https://mlwdev9815209134.vault.azure.net/
+  --ready_dir ${{outputs.ready}}
+
+environment: azureml:bronze-env@latest
+
+identity:
+  type: user_identity

@@ -1,0 +1,28 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+
+type: command
+
+display_name: prepare_ml_datasets
+
+experiment_name: prepare_ml_datasets
+
+code: ..
+
+command: >
+  export PYTHONPATH=src:$PYTHONPATH &&
+  pip install scikit-learn pandas pyarrow &&
+  python src/prepare/prepare_ml_datasets.py
+  --input_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/gold
+  --storage_account mockdeltalake
+  --key_vault_url https://mlwdev9815209134.vault.azure.net/
+  --training_output_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/ml/training
+  --scoring_output_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/ml/scoring
+  --scoring_fraction 0.5
+
+
+environment: azureml:medallion-env@latest
+
+identity:
+  type: user_identity
+
+compute: cc-train

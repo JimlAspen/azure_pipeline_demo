@@ -1,0 +1,24 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: gold_feature_job
+experiment_name: gold_feature_engineering
+
+tags:
+  stage: gold
+  layer: medallion
+
+code: ../
+command: >
+  pip install azure-ai-ml &&
+  python src/gold/gold.py 
+  --input_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/silver 
+  --output_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/gold
+  --key_vault_url https://mlwdev9815209134.vault.azure.net/
+
+environment: azureml:bronze-env@latest
+
+identity:
+  type: user_identity
+
+compute: cc-train

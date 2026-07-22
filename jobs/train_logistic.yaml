@@ -1,0 +1,35 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: train_logistic_job
+experiment_name: train_logistic
+
+code: ../
+
+command: >
+  export PYTHONPATH=src:$PYTHONPATH &&
+  pip install "mlflow<3.0.0" azureml-mlflow scikit-learn pandas pyarrow &&
+  python src/train/train_logistic.py
+  --input_path abfss://lake@mockdeltalake.dfs.core.windows.net/lake/gold
+  --storage_account mockdeltalake
+  --key_vault_url https://mlwdev9815209134.vault.azure.net/
+  --model_output_dir ${{outputs.model}}
+  --metrics_output_dir ${{outputs.metrics}}
+
+environment: azureml:bronze-env@latest
+
+compute: cc-train
+
+identity:
+  type: user_identity
+
+outputs:
+  model:
+    type: uri_folder
+
+  metrics:
+    type: uri_folder
+
+tags:
+  model: logistic_regression
+  stage: training

@@ -1,0 +1,19 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: bronze-env
+version: 2
+image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
+
+conda_file:
+  channels:
+    - conda-forge
+    - defaults
+  dependencies:
+    - python=3.10
+    - pip
+    - pip:
+        - polars
+        - deltalake
+        - azure-identity
+        - azure-keyvault-secrets
+        - azure-storage-blob
+        - azure-ai-ml
